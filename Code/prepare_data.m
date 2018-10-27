@@ -39,12 +39,14 @@ ROI_Width = round(rect(3));
 ROI_Height = round(rect(4));
 disp(' PICK A REGION ... OK!');
 
-Video = ImSeq;
-[width,height,frames] = size(Video);
+Video = ImSeq ./255;
+[Video_Height,Video_Width,NumFrames] = size(Video);
 
 disp(' SAVING DATA');
 
-save("cars.mat", 'Video','ROI_Center','ROI_Width','ROI_Height', 'width','height','frames', '-v7.3');
+
+save("cars.mat", 'Video','ROI_Center','ROI_Width','ROI_Height',...
+    'Video_Height','Video_Width','NumFrames', '-v7.3');
 disp(' SAVING DATA ... OK!');
 whos('-file','cars.mat')
 
