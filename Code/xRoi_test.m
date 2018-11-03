@@ -1,6 +1,7 @@
 % test xRoI operations
 clearvars
 close all
+imtool close all
 
 %%% Even dimensions
 
@@ -57,6 +58,8 @@ frame = Video(od{:},1);
 frameROI = xRoi(frame);
 
 figure
+iptsetpref('ImshowBorder','tight');
+
 tImg = ROI.annotate(frame);
 subplot(2,3,[1 2 4 5]);imshow(tImg);xlabel('Image patch');
 
@@ -78,13 +81,17 @@ for h = 1:Video_Height
     subplot(2,3,3);imshow(patch);
     
     patch_model = xRoi(patch).color_model(patch);xlabel('Image patch');
-    subplot(2,3,6);bar([target_model; patch_model]', 'Barwidth', 2);xlabel('Model pdf/Patch pdf'); axis on; 
-
+    subplot(2,3,6); ax = bar([target_model; patch_model]', 'Barwidth', 2);
+    xlabel('Model pdf/Patch pdf'); axis on; ylim([0 2000]); 
+    
     rho = bhattacharyya_coeff(target_model,patch_model);
     subplot(2,3,[1 2 4 5]);xlabel(sprintf('Batacharaya xoeff is %1.3f',rho));
 
-    
     drawnow;
+    if IsNear(rho,1.0)
+        pause(1.0);
+    end
+   
 end
 
 for w = 1:Video_Width
@@ -106,4 +113,8 @@ for w = 1:Video_Width
     subplot(2,3,[1 2 4 5]);xlabel(sprintf('Batacharaya xoeff is %1.3f',rho));
 
     drawnow;
+    if IsNear(rho,1.0)
+        pause(1.0)
+    end
+
 end
