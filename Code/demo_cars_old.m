@@ -9,7 +9,7 @@ NBins = 8;
 % Calculate Weight matrix
 
 % Allocate Memory to store Video result
-VideoResult = zeros(width,height,3,frames);
+VideoResult = zeros(Video_Height,Video_Width,3,NumFrames);
 odr = repmat({':'},1,ndims(VideoResult)-1);
 % Allocate Memory to store tracking possitions
 
@@ -26,7 +26,7 @@ weights = kernelMatrix(ROI_Width,ROI_Height,'kernel','epanechnikov');
 model_pdf = color_distribution(patch, NBins, weights);
 
 prev_center = ROI_Center;
-for frameNo = 2:frames
+for frameNo = 2:NumFrames
     frame = Video(od{:},frameNo);
     while(true)
         [patch, patch_Width,patch_Height] = getPatch(frame, prev_center,ROI_Width,ROI_Height);
@@ -36,7 +36,7 @@ for frameNo = 2:frames
 
         % Derive the weights and compute the mean-shift vector
         W = mean_shift_weights(patch, patch_pdf, model_pdf, NBins);
-        Z = meanshift_vector(patch,  weights);
+        Z = meanshift_vector(patch,  W);
         new_center = Z;
 
         % Re-evaluate at new center
@@ -61,9 +61,10 @@ for frameNo = 2:frames
         prev_center = new_center;
     end % while(true)
     
-    displayFrame = annotate_frame(gray2rgb(frame), new_center, patch_Width,patch_Height,frameNo);
+    %displayFrame = annotate_frame(gray2rgb(frame), new_center, patch_Width,patch_Height,frameNo);
+    displayFrame = annotate_frame(frame, new_center, patch_Width,patch_Height,frameNo);
     VideoResult(odr{:},frameNo) = displayFrame;
-    subplot(2,3,[1 2 4 5]);imshow(displayFrame);
+    subplot(2,3,[1 2 4 5]);subimage(displayFrame);
     subplot(2,3,3);bar([model_pdf; patch_pdf]', 'Barwidth', 2);xlabel('Model pdf/Patch pdf'); axis on; 
     subplot(2,3,6);imagesc(W);xlabel('Mean Shift Weights'); axis on; 
     drawnow;
