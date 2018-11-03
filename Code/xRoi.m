@@ -26,7 +26,7 @@ classdef xRoi
     end
     
     properties (Dependent, Hidden)
-        area, br
+        area, br, width, height
     end
     
     
@@ -85,6 +85,15 @@ classdef xRoi
         function br=get.br(self)
             br=[self.tl(1)+self.length(1)-1,self.tl(2)+self.length(2)-1];
         end
+        
+        function width = get.width(self) 
+            width = self.length(1);
+        end
+        
+        function height = get.height(self)
+            height = self.length(2);
+        end
+
         
         function area = get.area(self)
             area = self.length(1) * self.length(2);
