@@ -6,7 +6,6 @@ od = repmat({':'},1,ndims(Video)-1);
 % Parameters
 NBins = 8;
 
-
 % Allocate Memory to store Video result
 VideoResult = zeros(Video_Height,Video_Width,3,NumFrames);
 od3 = repmat({':'},1,ndims(VideoResult)-1);
@@ -27,7 +26,6 @@ videoH = figure('name', 'Mean Shift Algorithm');
 title =("Mean shift tracking");
 
 prev_center = ROI_Center;
-%patch_roi = target_roi;
 for frameNo = 2:NumFrames
     frame = Video(od{:},frameNo);
         
@@ -43,3 +41,13 @@ for frameNo = 2:NumFrames
     
 end
 
+%movieFile='../Videos/demo_cars.avi';
+p = mfilename('fullpath');
+[filepath,name,ext]=fileparts(p);
+movieFile=fullfile(filepath,'../Videos/',[name,'.avi']);
+
+movie=immovie(VideoResult);
+myVideo = VideoWriter(movieFile);
+open(myVideo);
+writeVideo(myVideo, movie);
+close(myVideo);
