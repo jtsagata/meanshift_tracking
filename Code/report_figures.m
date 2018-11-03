@@ -1,4 +1,5 @@
 close all
+clearvars
 
 f2 = figure('visible','off');
 iptsetpref('ImshowBorder','tight');
@@ -7,7 +8,7 @@ load("cars.mat");
 od = repmat({':'},1,ndims(Video)-1);
 frame = Video(od{:},1);
 frameROI = xRoi(frame);
-target_model = frameROI.color_model(patch);
+target_model = frameROI.color_model(frame);
 
 weights = kernelMatrix(frameROI.length(2),frameROI.length(1),'kernel','epanechnikov');
 binSize = 1.0/8;
