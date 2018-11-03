@@ -23,7 +23,7 @@ function patch_roi=meanshift_algorithm(frame,prev_center,target_roi,target_model
 
         % Converge to the new center
         rho_loop_count = 0;
-        while ( (rho1 < rho0) & (rho_loop_count<100) )
+        while ( (rho1 < rho0) & (rho_loop_count<25) )
             new_center = ceil((prev_center + new_center) / 2);
             patch_roi = xRoi(new_center, target_roi.width,target_roi.height);
             rho1 = region_rho(frame, patch_roi, target_model);

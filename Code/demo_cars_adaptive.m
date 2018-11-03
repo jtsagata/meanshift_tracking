@@ -30,6 +30,9 @@ for frameNo = 2:NumFrames
     frame = Video(od{:},frameNo);
         
     patch_roi=meanshift_algorithm(frame,prev_center,target_roi,target_model,NBins);
+    target_roi = patch_roi;
+    target_image = target_roi.getRoiImage(frame);
+    target_model = xRoi(target_image).color_model(target_image);
     
     displayFrame=patch_roi.annotate(frame);
     displayFrame=annotate_frame(displayFrame, frameNo);
@@ -41,6 +44,7 @@ for frameNo = 2:NumFrames
     
 end
 
+return
 p = mfilename('fullpath');
 [filepath,name,ext]=fileparts(p);
 movieFile=fullfile(filepath,'../Videos/',[name,'.avi']);
