@@ -51,3 +51,7 @@ myVideo = VideoWriter(movieFile);
 open(myVideo);
 writeVideo(myVideo, movie);
 close(myVideo);
+
+pngFile=fullfile(filepath,'../Videos/',[name,'.png']);
+video_to_img_seq(VideoResult,pngFile);
+
