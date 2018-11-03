@@ -25,11 +25,17 @@ VideoResult(od3{:},1) = displayFrame;
 videoH = figure('name', 'Mean Shift Algorithm');
 title =("Mean shift tracking");
 
+totalTime=0;
 prev_center = ROI_Center;
 for frameNo = 2:NumFrames
     frame = Video(od{:},frameNo);
-        
+
+    % Start measure of execution time
+    tic; 
     patch_roi=meanshift_algorithm(frame,prev_center,target_roi,target_model,NBins);
+    prev_center=patch_roi.center;
+    totalTime = totalTime + toc;
+    % End measure of execution time 
     
     displayFrame=patch_roi.annotate(frame);
     displayFrame=annotate_frame(displayFrame, frameNo);
@@ -38,7 +44,6 @@ for frameNo = 2:NumFrames
     imshow(displayFrame);
     xlabel('Video sequence');
     drawnow;
-    
 end
 
 p = mfilename('fullpath');
@@ -53,4 +58,9 @@ close(myVideo);
 
 pngFile=fullfile(filepath,'../Videos/',[name,'.png']);
 video_to_img_seq(VideoResult,pngFile);
+
+txtFile=fullfile(filepath,'../Videos/',[name,'.txt']);
+fileID = fopen(txtFile,'w');
+fprintf(fileID,'ExecutionTime %1.4f secs.\n',totalTime);
+fclose(fileID);
 
