@@ -124,7 +124,8 @@ classdef xRoi
             % imPatch=roi(image) Trim an image with the ROI get the sub image
             frameROI = xRoi(image);
             inter = frameROI.intersect(self);  
-            imPatch = image( inter.tl(2):inter.br(2), inter.tl(1):inter.br(1));
+            % ImPatch is work on all type of images
+            imPatch = imcrop(image, [inter.tl(1),inter.tl(2),inter.length(1),inter.length(2)]);
         end
         
         function model=color_model(self,image,varargin)
@@ -143,7 +144,6 @@ classdef xRoi
             imgRoi = xRoi(image);
             imPatch  = getRoiImage(self, image);
             weights = kernelMatrix(imgRoi.length(2),imgRoi.length(1),'kernel',kernel);
-            assert(isequal(size(weights),size(imPatch)));
             
             model = color_distribution(imPatch, nbins, weights);
         end
