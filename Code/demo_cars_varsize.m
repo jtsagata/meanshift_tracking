@@ -33,13 +33,20 @@ for frameNo = 2:NumFrames
     % Start measure of execution time
     tic;
     
-    patch_roi=meanshift_algorithm(frame,prev_center,target_roi,target_model,NBins);
+    % Adapt to varius scales
+    scales = 0.8:0.1:1.2;
+    minDist = 1e99;
+    for s = 1:size(scales,1)
+        var_roi = target_roi.scale(scales(s));
+        patch_var_roi=meanshift_algorithm(frame,prev_center,var_roi,target_model,NBins);
+        % Find region with minimum distance
+        dist = norm(prev_center-patch_var_roi.center);
+        if (dist < minDist)
+            minDist = dist;
+            patch_roi = patch_var_roi;
+        end
+    end
     prev_center=patch_roi.center;
-    
-    % Adapt
-    target_roi = patch_roi;
-    target_image = target_roi.getRoiImage(frame);
-    target_model = xRoi(target_image).color_model(target_image);
     
     % End measure of execution time 
     totalTime = totalTime + toc;
