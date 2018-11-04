@@ -7,7 +7,6 @@ function TargetModel = color_distribution(imPatch, Nbins, weights)
     whereToPut = histDistMat(imPatch,Nbins);
     for indx=1:Nbins
         TargetModel(indx) = sum(sum( weights .* (whereToPut == indx)));
-        TargetModel(indx) = sum(sum( (whereToPut == indx)));
     end
 end
 
