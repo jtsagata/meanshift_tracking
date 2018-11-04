@@ -156,12 +156,18 @@ classdef xRoi
                 % Convert frame to RGB
                 image=cat(3,image);
             end
-               
-            imageOut = insertMarker(image,[self.center(1),self.center(2)],'x', 'color', color);
-           
-            imageOut = insertShape(imageOut,'rectangle', ...
-                [self.tl(1), self.tl(2), self.length(1), self.length(2)], ...
-                'LineWidth', 2, 'Color', color);
+            
+            if (isfinite(self.center))
+                imageOut = insertMarker(image,[self.center(1),self.center(2)],'x', 'color', color);
+            else
+                imageOut = image;
+            end
+            
+            if (isfinite(self.tl))
+                imageOut = insertShape(imageOut,'rectangle', ...
+                    [self.tl(1), self.tl(2), self.length(1), self.length(2)], ...
+                    'LineWidth', 2, 'Color', color);
+            end
         end
         
     end

@@ -1,4 +1,4 @@
-function patch_roi=meanshift_algorithm(frame,prev_center,target_roi,target_model,NBins)
+function [patch_roi,rho1]=meanshift_algorithm(frame,prev_center,target_roi,target_model,NBins)
 %UNTITLED6 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -8,9 +8,9 @@ function patch_roi=meanshift_algorithm(frame,prev_center,target_roi,target_model
 
         patch_roi = xRoi(prev_center, target_roi.width,target_roi.height);
         patch_image = patch_roi.getRoiImage(frame);
-        patch_model = xRoi(patch_image).color_model(patch_image);
+        patch_model = xRoi(patch_image).color_model(patch_image, 'nbins', NBins);
 
-        rho0 = region_rho(frame, patch_roi, target_model);
+        rho0 = region_rho(frame, patch_roi, target_model, NBins);
 
         % Derive the weights and compute the mean-shift vector
         W = meanshift_weights(patch_image, patch_model, target_model, NBins);
@@ -18,7 +18,7 @@ function patch_roi=meanshift_algorithm(frame,prev_center,target_roi,target_model
 
         % Re-evaluate at new center
         patch_roi = xRoi(new_center, target_roi.width,target_roi.height);
-        rho1 = region_rho(frame, patch_roi, target_model);
+        rho1 = region_rho(frame, patch_roi, target_model, NBins);
         %prev_center = patch_roi.center;
 
         % Converge to the new center
@@ -26,7 +26,7 @@ function patch_roi=meanshift_algorithm(frame,prev_center,target_roi,target_model
         while ( (rho1 < rho0) & (rho_loop_count<25) )
             new_center = ceil((prev_center + new_center) / 2);
             patch_roi = xRoi(new_center, target_roi.width,target_roi.height);
-            rho1 = region_rho(frame, patch_roi, target_model);
+            rho1 = region_rho(frame, patch_roi, target_model, NBins);
             rho_loop_count = rho_loop_count +1;
         end
 
@@ -39,9 +39,9 @@ function patch_roi=meanshift_algorithm(frame,prev_center,target_roi,target_model
 
 end
 
-function rho = region_rho(frame, roi, target_model)
+function rho = region_rho(frame, roi, target_model, NBins)
     patch_image = roi.getRoiImage(frame);
-    patch_model = xRoi(patch_image).color_model(patch_image);
+    patch_model = xRoi(patch_image).color_model(patch_image, 'nbins', NBins);
     rho = bhattacharyya_coeff(target_model,patch_model);
 end
 

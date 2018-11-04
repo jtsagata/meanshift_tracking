@@ -4,7 +4,7 @@ load("cars.mat");
 od = repmat({':'},1,ndims(Video)-1);
 
 % Parameters
-NBins = 8;
+NBins = 16;
 
 % Allocate Memory to store Video result
 VideoResult = zeros(Video_Height,Video_Width,3,NumFrames);
@@ -14,7 +14,7 @@ od3 = repmat({':'},1,ndims(VideoResult)-1);
 frame = Video(od{:},1);
 target_roi   = xRoi(ROI_Center,ROI_Width,ROI_Height);
 target_image = target_roi.getRoiImage(frame);
-target_model = xRoi(target_image).color_model(target_image);
+target_model = xRoi(target_image).color_model(target_image, 'nbins', NBins, 'kernel', 'epanechnikov');
 
 % Anaotate 1st video frame
 displayFrame=target_roi.annotate(frame);
