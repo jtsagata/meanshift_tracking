@@ -5,7 +5,9 @@ function weights = meanshift_weights(imPatch, TargetModel, ColorModel, Nbins)
     whereToPut = histDistMat(imPatch,Nbins);
 
     for i=1:Nbins
-        weights = weights + ( whereToPut == i) .*  sqrt(TargetModel(i)/ColorModel(i));
+        multiplier = sqrt(TargetModel(i)/ColorModel(i));
+        weights = weights + ( whereToPut == i) .*  multiplier;
     end
     
+    assert(all(weights(:) >=0));
 end

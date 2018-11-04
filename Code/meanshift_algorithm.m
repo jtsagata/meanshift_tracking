@@ -14,12 +14,13 @@ function [patch_roi,rho1]=meanshift_algorithm(frame,prev_center,target_roi,targe
 
         % Derive the weights and compute the mean-shift vector
         W = meanshift_weights(patch_image, patch_model, target_model, NBins);
+        assert(all(W(:)>=0));
+        
         new_center = meanshift_vector(patch_image,  W);
 
         % Re-evaluate at new center
         patch_roi = xRoi(new_center, target_roi.width,target_roi.height);
         rho1 = region_rho(frame, patch_roi, target_model, NBins);
-        %prev_center = patch_roi.center;
 
         % Converge to the new center
         rho_loop_count = 0;
