@@ -28,7 +28,10 @@ function d_matrix = kernelMatrix(m,n,varargin)
     else % Gaussian
         d_matrix = 2/pi .* ( ones(n,m) - X );
     end
-
+    
+    % if x>=1
+    d_matrix(d_matrix<0)=0;
+    
     d_matrix = transpose(d_matrix);
 
 end
