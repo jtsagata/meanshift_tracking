@@ -20,5 +20,8 @@ function patch_model = color_distribution(imPatch, Nbins, weights)
         patch_model=[patch_model chanel_model];
     end
     
+    % No zeroelements
+    patch_model = patch_model + eps;
+    
 end
 

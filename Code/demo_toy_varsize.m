@@ -3,6 +3,10 @@ close all
 load("toy.mat");
 od = repmat({':'},1,ndims(Video)-1);
 
+
+% Rought background claculation
+background=mean(Video,4);
+
 % Parameters
 NBins = 8;
 rhoLimit = 0.9;
@@ -12,7 +16,9 @@ VideoResult = zeros(Video_Height,Video_Width,3,NumFrames);
 od3 = repmat({':'},1,ndims(VideoResult)-1);
 
 
-frame = Video(od{:},1);
+frame_bg = Video(od{:},1);
+frame = imsubtract(background,frame_bg);
+
 target_roi   = xRoi(ROI_Center,ROI_Width,ROI_Height);
 target_image = target_roi.getRoiImage(frame);
 target_model = xRoi(target_image).color_model(target_image);
@@ -29,7 +35,9 @@ title =("Mean shift tracking");
 totalTime=0;
 prev_center = ROI_Center;
 for frameNo = 2:NumFrames
-    frame = Video(od{:},frameNo);
+    %frame = Video(od{:},frameNo);
+    frame_bg = Video(od{:},frameNo);
+    frame = imsubtract(background,frame_bg);
     
     % Start measure of execution time
     tic;
