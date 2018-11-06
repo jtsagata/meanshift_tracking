@@ -117,13 +117,29 @@ classdef xRoi
             x2 = min(self.br(1),other.br(1));
             y2 = min(self.br(2),other.br(2));
             
+            assert(x1<=x2);
+            assert(y1<=y2);
             roi = xRoi(x1,y1, x2,y2);
         end 
+        
+        function cond=point_inside(self,point)
+            % cond=roi.point_inside(point)
+            %     return true if the given point is inside
+            %     the region or at region boundaries
+            
+            % There is the inpolygon fuction, but thats too much
+            px = point(1);
+            py = point(2);
+            
+            cond= (self.tl(1) <=px) & (px <= self.br(1)) & ...
+                  (self.tl(2) <=py) & (py <= self.br(2));
+            
+        end
         
         function imPatch=getRoiImage(self, image)
             % imPatch=roi(image) Trim an image with the ROI get the sub image
             frameROI = xRoi(image);
-            inter = frameROI.intersect(self);  
+            inter = frameROI.intersect(self);
             % ImPatch is work on all type of images
             imPatch = imcrop(image, [inter.tl(1),inter.tl(2),inter.length(1),inter.length(2)]);
         end
