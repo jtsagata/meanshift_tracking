@@ -45,20 +45,19 @@ w = zeros(1,NParticle);
 
 % for t=2:NumImages
 next_frame=Video(od{:},2);
-for i = 1:NParticle
+pos =1;
+for ii = 1:NParticle
      % create a random point inside the ROI
-    while true
-        new_point = round( xpPred(i,:) + ([sig_x sig_y].^2).*randn(1,length(x_init)) );
-        if frame_roi.point_inside(new_point)
-        	break;
-        end
-    end
-    xpPred(i,:) = new_point;
+     new_point = round( xpPred(ii,:) + ([sig_x sig_y].^2).*randn(1,length(x_init)) );
+     if frame_roi.point_inside(new_point)
+        xpPred(pos,:) = new_point;
+        pos = pos +1;
+     end
 end
 
 % Evaluate Importance Weights
-for i=1:NParticle
-    particle = xpPred(i,:);
+for ii=1:NParticle
+    particle = xpPred(ii,:);
     % - extract a patch around xpPred(i,:)
     patch_roi = xRoi(particle, target_roi.width,target_roi.height);
     patch_image = patch_roi.getRoiImage(next_frame);
@@ -67,7 +66,7 @@ for i=1:NParticle
     % - compute batt. coeff
     rho = region_rho(next_frame, patch_roi, target_model, NBins);        
     % - compute weight w(i)
-    w(i) = exp(-1 * lambda * (1-rho)^2); 
+    w(ii) = exp(-1 * lambda * (1-rho)^2); 
 end
 % Normalise the weights.
 w = w./sum(w); 

@@ -40,7 +40,7 @@ for frameNo = 2:NumFrames
     frame_bg = Video(od{:},frameNo);
     %frame = imsubtract(background .* 0.25,frame_bg);
     frame = imsubtract(background,frame_bg);
-    frame = frame_bg - background .* 0.75;
+    frame = frame_bg - background .* 0.95;
 
 %     frame = Video(od{:},frameNo);
     

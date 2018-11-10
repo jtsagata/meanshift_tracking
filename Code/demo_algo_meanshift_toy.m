@@ -3,7 +3,7 @@ clearvars
 close all
 imtool close all
 
-load("cars.mat");
+load("toy.mat");
 od = repmat({':'},1,ndims(Video)-1);
 ROI=xRoi(ROI_Center,ROI_Width,ROI_Height);
 
@@ -37,7 +37,7 @@ for h = 1:Video_Height
     
     patch_model = xRoi(patch).color_model(patch);xlabel('Image patch');
     subplot(2,3,6); ax = bar([target_model; patch_model]', 'Barwidth', 2);
-    xlabel('Model pdf/Patch pdf'); axis on; ylim([0 2000]); 
+    xlabel('Model pdf/Patch pdf'); axis on; ylim([0 800]); 
     
     rho = bhattacharyya_coeff(target_model,patch_model);
     subplot(2,3,[1 2 4 5]);xlabel(sprintf('Batacharaya coeff is %1.3f',rho));
@@ -76,7 +76,7 @@ for w = 1:Video_Width
     
     patch_model = xRoi(patch).color_model(patch);xlabel('Image patch');
     subplot(2,3,6);bar([target_model; patch_model]', 'Barwidth', 2);
-    xlabel('Model pdf/Patch pdf'); axis on;ylim([0 2000]); 
+    xlabel('Model pdf/Patch pdf'); axis on;ylim([0 800]); 
 
     rho = bhattacharyya_coeff(target_model,patch_model);
     subplot(2,3,[1 2 4 5]);xlabel(sprintf('Batacharaya coeff is %1.3f',rho));
